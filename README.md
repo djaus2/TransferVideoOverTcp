@@ -9,7 +9,7 @@ Transfer a video locally from an Android phone to Windows Desktop over TCP.
 - GetVideo
   - Console app that receives the video
 -  DownloadVideoOverTcpLib
-    - Library used by Console app to implement reception of video file over TCP.
+    - Library used by Console app to implement reception of the video file over TCP.
 - SendVideo
   - MAUI Android phone app to send video from /Movies folder
   - UI includes selection of file from the folder
