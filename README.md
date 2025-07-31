@@ -17,7 +17,7 @@ Transfer a video locally from an Android phone to Windows Desktop over TCP.
   - MAUI Library used by SendVideo to implement sending of video file over TCP
  
 ## Notes
-- THe filename of the source file is sent and used when saving the the received file.
+- The filename of the source file is sent and used when saving the the received file.
 - A checksum is determined and sent as part of the transmission and checked upon reception.
 - The file is sent as 1MB packets.
-- GetVideo inludes option paameter to set the target folder _(default c:\temp\AAA)_ and TCP port _(default 5000)_.
+- GetVideo includes optional paameter to set the target folder _(default c:\temp\AAA)_ and TCP port _(default 5000)_.
