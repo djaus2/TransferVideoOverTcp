@@ -7,7 +7,7 @@ Transfer a video locally from an Android phone to Windows Desktop over TCP.
 
 ## Projects
 - GetVideo
-  - Console app thagt receives the video
+  - Console app that receives the video
 -  DownloadVideoOverTcpLib
   - Library used by Console app to implement reception of video file over TCP.
 - SendVideo
