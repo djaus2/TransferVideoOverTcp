@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "GetVideo": {
+      "commandName": "Project",
+      "commandLineArgs": "--heLP"
+    }
+  }
+}
