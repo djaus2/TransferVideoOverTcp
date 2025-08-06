@@ -2,19 +2,28 @@
 using System.Net;
 using System.Text;
 using System.Security.Cryptography;
+using System.Net.NetworkInformation;
+using System.Collections.ObjectModel;
+using SendVideoOverTCPLib.ViewModels;
+
 
 namespace SendVideoOverTCPLib
 {
     // All the code in this file is included in all platforms.
-    public class SendVideo
+    public static class SendVideo
     {
-        public static async void OnSendMovieFileClicked(object sender, EventArgs e)
+        /*public static int MaxIPAddress { get; set; } = 20;
+        public static int MinIPAddress { get; set; } = 2;  //Router is often XX.YY.ZZ.1
+        public static int TimeoutInHalfSeconds { get; set; } = 6;*/
+        public static NetworkViewModel NetworkViewModel = new();
+
+        public static async Task OnSendMovieFileClicked(NetworkViewModel _networkViewModel)
         {
             var file = await PickMovieFileAsync();
             if (file is null)
                 return;
 
-            await SendFileWithChecksumAsync(file.FullPath, "192.168.0.9", 5000); // Use desktop's LAN IP
+            await SendFileWithChecksumAsync(file.FullPath, NetworkViewModel.SelectedIpAddress, NetworkViewModel.SelectedPort); // Use desktop's LAN IP
         }
 
         private static async Task<FileResult?> PickMovieFileAsync()
@@ -32,6 +41,7 @@ namespace SendVideoOverTCPLib
 
             return await FilePicker.PickAsync(options);
         }
+
         public static async Task SendFileWithChecksumAsync(string filePath, string ipAddress, int port)
         {
             using var client = new TcpClient();
@@ -60,5 +70,123 @@ namespace SendVideoOverTCPLib
                 await stream.WriteAsync(buffer, 0, bytesRead);
             }
         }
+
+        /// <summary>
+        /// Get list of local active IpAddresses 
+        /// Uses this phones's subnet
+        /// Excluding this phone's
+        /// </summary>
+        /// <returns>List of IpAddresses.</returns>
+        public static async Task<List<string>> GetLocalActiveDevices()
+        {
+            string localIP = GetLocalPhoneIPAddress(); // e.g., 192.168.1.42
+            string subnet = localIP.Substring(0, localIP.LastIndexOf('.') + 1); // e.g., 192.168.1.
+            List<string> activeIPs = new List<string>();
+            for (int i = NetworkViewModel.StartHostId; i <= NetworkViewModel.EndHostId; i++)
+            {
+                string ip = $"{subnet}{i}";
+                using var ping = new Ping();
+                var reply = await ping.SendPingAsync(ip, NetworkViewModel.TimeoutInMs);
+                if (reply.Status == IPStatus.Success)
+                {
+                    if(ip != localIP) // Exclude the local IP
+                        activeIPs.Add(ip);
+                }
+            }
+
+            return activeIPs;
+
+        }
+
+        static string GetLocalPhoneIPAddress()
+        {
+            foreach (NetworkInterface ni in NetworkInterface.GetAllNetworkInterfaces())
+            {
+                if (ni.OperationalStatus == OperationalStatus.Up &&
+                    ni.NetworkInterfaceType != NetworkInterfaceType.Loopback)
+                {
+                    foreach (UnicastIPAddressInformation ip in ni.GetIPProperties().UnicastAddresses)
+                    {
+                        if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
+                        {
+                            return ip.Address.ToString();
+                        }
+                    }
+                }
+            }
+            return "No active IPv4 network adapters found.";
+        }
+
+        /// <summary>
+        /// Get Observable Collection of local active IpAddresses.
+        /// Excluding this phone's
+        /// And excluding Subnet.1, oftehn the router.
+        /// </summary>
+        /// <returns>IPAddress if only one.</returns>
+        public static async Task<string> GetIps()
+        {;
+            var ips = await GetLocalActiveDevices();
+            NetworkViewModel.ActiveIPs = new ObservableCollection<string>(ips);
+            if (NetworkViewModel.ActiveIPs.Count == 1)
+            {
+                NetworkViewModel.SelectedIpAddress = NetworkViewModel.ActiveIPs[0];
+                return NetworkViewModel.SelectedIpAddress;
+            }
+            else
+            {
+                NetworkViewModel.SelectedIpAddress = "";
+            }
+            return "";
+        }
+
+
+
+        public static async Task<string> GetSettings(bool checkSettings = true)
+        {
+            NetworkViewModel = Settings.GetSettingNetworkViewModel();
+            NetworkViewModel.ActiveIPs = new();
+            string ip = "";
+            if(checkSettings)
+                ip = await TryRestoreSelectedIpAsync();
+            if (string.IsNullOrEmpty(ip))
+            { 
+                try
+                {
+                    ip = await GetIps();
+                    Settings.SaveSelectedSettings(NetworkViewModel);
+                }
+                catch (Exception ex)
+                {
+                    // Handle exceptions, e.g., log them or show an alert
+                    Console.WriteLine($"Error retrieving IPs: {ex.Message}");
+                    return ""; // Return an empty on error
+                }   
+            }
+            return ip;
+        }
+
+        public static async Task<string> TryRestoreSelectedIpAsync()
+        {
+
+            string savedIp = NetworkViewModel.SelectedIpAddress;
+            if (!string.IsNullOrEmpty(savedIp))
+            {
+                using var ping = new Ping();
+                try
+                {
+                    var reply = await ping.SendPingAsync(savedIp, NetworkViewModel.TimeoutInHalfSeconds * 500);
+                    if (reply.Status == IPStatus.Success)
+                    {
+                        return savedIp;
+                    }
+                }
+                catch
+                {
+                    // Optionally log or ignore
+                }
+            }
+            return "";
+        }
+
     }
 }

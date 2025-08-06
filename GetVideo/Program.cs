@@ -5,9 +5,17 @@ using System.Linq.Expressions;
 using System.Text;
 using DownloadVideoOverTCPLib;
 
+using Sportronics.ConfigurationManager;
+
 
 
 using System.Security.Cryptography;
+using Microsoft.Extensions.Configuration.Json;
+using GetVideoApp;
+using Microsoft.Extensions.Configuration;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.IO;
 
 
 namespace Transfer
@@ -16,38 +24,47 @@ namespace Transfer
     {
         static void Main(string[] args)
         {
-            string folder = @"C:\temp\AAA";
-            int port = 5000;
-
-            if (args.Length > 0)
+            Console.WriteLine("Starting application...");
+            AppSettings? appSettings = null;
+            // Default settings (lowest priority)
+            appSettings = new AppSettings
             {
-                if (!string.IsNullOrEmpty(args[0]))
-                {
-                    string arg = args[0];
-                    if (arg.Contains("/?") || arg.Contains("--help", StringComparison.OrdinalIgnoreCase))
-                    {
-                        Console.WriteLine("Usage: Transfer.exe [folder] [port]\n" +
-                            "folder: The folder to save the video (default is C:\\temp\\AAA)\n" +
-                            "port: The port to listen on (default is 5000)");
-                        return;
-                    }
-                }
+                Folder = @"c:\Temp\Vid",
+                Port = 5000
+            };
 
-                if (args.Length > 1)
-                {
-                    if (int.TryParse(args[1], out int _port))
-                        port = _port;
-                }
+
+
+
+            // Define command line options mapping
+            var optionsMap = new Dictionary<string, (string LongName, string ShortName)>
+            {
+                { "Folder", ("folder", "f") },
+                { "Port", ("port", "p") }
+            };
+
+            // Create configuration processor
+            var configProcessor = new ConfigurationProcessor<AppSettings>(
+              "appsettings.json",
+              optionsMap,
+              appSettings);
+
+
+
+            appSettings = configProcessor.ProcessConfiguration(args);
+            if(appSettings == null)
+            {
+                return;
             }
 
-            //// Parse arguments
-            //foreach (var arg in args)
-            //{
-            //    if (arg.StartsWith("--folder="))
-            //        folder = arg.Substring("--folder=".Length);
-            //    else if (arg.StartsWith("--port=") && int.TryParse(arg.Substring("--port=".Length), out int parsedPort))
-            //        port = parsedPort;
-            //}
+            string folder = appSettings.Folder;
+            int port = appSettings.Port;
+
+            if (!Directory.Exists(folder))
+            {
+                Directory.CreateDirectory(folder);
+            }
+
             Console.WriteLine("Hello Phone World!");
 
             // Get local IP address
@@ -56,7 +73,7 @@ namespace Transfer
             Console.WriteLine($"App is running at IP: {localIP}, Port: {port}");
             Console.WriteLine($"Using folder: {folder}");
 
-            var filepath = GetVideo.Download(folder,port);
+            var filepath = DownloadVideoOverTCPLib.GetVideo.Download(folder,port);
 
             Console.WriteLine($"File received: {filepath} in folder {folder}");
         }

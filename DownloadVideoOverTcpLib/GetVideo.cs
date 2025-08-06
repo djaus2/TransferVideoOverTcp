@@ -49,8 +49,8 @@ namespace DownloadVideoOverTCPLib
 
                 byte[] expectedChecksum = new byte[32]; // SHA256
                 ReadExact(networkStream, expectedChecksum, 0, 32);
-
-                using var fileStream = File.Create(fileName);
+                string filePath = Path.Combine(fileFolder, fileName);
+                using var fileStream = File.Create(filePath);
                 using var sha256 = SHA256.Create();
 
                 byte[] buffer = new byte[1024 * 1024];

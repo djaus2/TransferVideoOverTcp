@@ -1,23 +1,46 @@
-﻿using System.Net;
+﻿using System.Collections.ObjectModel;
+using System.Globalization;
+using System.Net;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
+using AndroidX.Lifecycle;
 using Microsoft.Maui.Storage;
+using SendVideoOverTCPLib;
+using SendVideoOverTCPLib.ViewModels;
 
 namespace SendVideo
 {
     public partial class MainPage : ContentPage
     {
-        int count = 0;
-
         public MainPage()
         {
             InitializeComponent();
         }
 
+        protected override async void OnAppearing()
+        {
+            base.OnAppearing();
+            grid.IsVisible = false;
+            BusyIndicatorLabel.Text = $"Getting saved Target Host ID or Local active Ids to select from if no setting (slower).";
+            BusyIndicatorLabel.IsVisible = true;
+            BusyIndicator.IsVisible = true;
+            BusyIndicator.IsRunning = true;
+            var ipaddress =  await SendVideoOverTCPLib.SendVideo.GetSettings();
+            this.BindingContext = SendVideoOverTCPLib.SendVideo.NetworkViewModel;
+            BusyIndicator.IsRunning = false;
+            BusyIndicator.IsVisible = false;
+            BusyIndicatorLabel.IsVisible = false;
+            grid.IsVisible = true;
+        }
+
+
+
+
+
         private async void OnCounterClicked(object sender, EventArgs e)
         {
-
 
             // Load your file as bytes
             byte[] fileBytes = File.ReadAllBytes(@"c:\temp\AAA\fghfggN.mp4");
@@ -34,11 +57,14 @@ namespace SendVideo
         }
         private async void OnSendMovieFileClicked(object sender, EventArgs e)
         {
-            var file = await PickMovieFileAsync();
-            if (file is null)
-                return;
-
-            await SendFileWithChecksumAsync(file.FullPath, "192.168.0.9", 5000); // Use desktop's LAN IP
+            NetworkViewModel networkViewModel = (NetworkViewModel)BindingContext;
+            await SendVideoOverTCPLib.SendVideo.OnSendMovieFileClicked(networkViewModel);
+            
+            //var file = await PickMovieFileAsync();
+            //if (file is null)
+                //return;
+            //var ipAddress = networkViewModel.SelectedIP;
+            //await SendFileWithChecksumAsync(file.FullPath, ipAddress, 5000); // Use desktop's LAN IP
             /*var fileBytes = File.ReadAllBytes(file.FullPath);
 
             using var client = new TcpClient();
@@ -53,20 +79,37 @@ namespace SendVideo
 
 
         private async Task<FileResult?> PickMovieFileAsync()
-    {
-        var customFileTypes = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
-    {
-        { DevicePlatform.Android, new[] { "video/*" } }, // targets all video types
-    });
-
-        var options = new PickOptions
         {
-            PickerTitle = "Select a Movie File",
-            FileTypes = customFileTypes
-        };
+            var customFileTypes = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
+            {
+                { DevicePlatform.Android, new[] { "video/*" } }, // targets all video types
+            });
 
-        return await FilePicker.PickAsync(options);
-    }
+            var options = new PickOptions
+            {
+                PickerTitle = "Select a Movie File",
+                FileTypes = customFileTypes,
+
+            };
+
+            var pick =  await FilePicker.PickAsync(options);
+            if (pick is null)
+            {
+                // User canceled the file picker
+                return null;
+            }
+            // Ensure the file is a video type
+            var fileExtension = Path.GetExtension(pick.FullPath).ToLowerInvariant();
+            var validVideoExtensions = new[] { ".mp4", ".avi", ".mkv", ".mov", ".wmv" };
+            if (!validVideoExtensions.Contains(fileExtension))
+            {
+                await DisplayAlert("Invalid File Type", "Please select a valid video file.", "OK");
+                return null;
+            }
+            Uri uri = new Uri(pick.FullPath);
+            Preferences.Set("LastVideoUri", uri.ToString());
+            return pick;
+        }
 
         public async Task SendFileAsync(string filePath, string ipAddress, int port)
         {
@@ -120,9 +163,12 @@ namespace SendVideo
             // Optional: stream.FlushAsync() isn’t strictly needed here
         }
 
+       // using Microsoft.Maui.Storage;
 
-        public async Task SendFileWithChecksumAsync(string filePath, string ipAddress, int port)
-        {
+
+
+    public async Task SendFileWithChecksumAsync(string filePath, string ipAddress, int port)
+    {
             using var client = new TcpClient();
             await client.ConnectAsync(IPAddress.Parse(ipAddress), port);
             using var stream = client.GetStream();
@@ -150,7 +196,46 @@ namespace SendVideo
             }
         }
 
+        private void ClearAllSettings(object sender, EventArgs e)
+        {
+            SendVideoOverTCPLib.Settings.ClearAllPreferences();
+            OnAppearing();
+        }
 
+        private void ClearSettings(object sender, EventArgs e)
+        {
+            SendVideoOverTCPLib.Settings.ClearPreferences();
+            OnAppearing();
+        }
+
+
+        private void OnIpPickerSelectionChanged(object sender, EventArgs e)
+        {
+            SendVideoOverTCPLib.Settings.SaveSelectedSettings(((NetworkViewModel)this.BindingContext));
+        }
+
+        private void SelectedPort_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            SendVideoOverTCPLib.Settings.SaveSelectedSettings(((NetworkViewModel)this.BindingContext));
+        }
+
+        private async void RescanIps(object sender, EventArgs e)
+        {
+            var nw = (NetworkViewModel)this.BindingContext;
+ 
+            SendVideoOverTCPLib.Settings.SaveHostIdRange(nw.StartHostId, nw.EndHostId);
+            grid.IsVisible = false;
+            BusyIndicatorLabel.Text = $"Getting saved Target Host ID or Local active Ids to select from if no setting (slower).";
+            BusyIndicatorLabel.IsVisible = true;
+            BusyIndicator.IsVisible = true;
+            BusyIndicator.IsRunning = true;
+            await SendVideoOverTCPLib.SendVideo.GetSettings(false);
+            this.BindingContext = SendVideoOverTCPLib.SendVideo.NetworkViewModel;
+            BusyIndicator.IsRunning = false;
+            BusyIndicator.IsVisible = false;
+            BusyIndicatorLabel.IsVisible = false;
+            grid.IsVisible = true;
+        }
     }
 
 }

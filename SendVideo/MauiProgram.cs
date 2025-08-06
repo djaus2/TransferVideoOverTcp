@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 
+
 namespace SendVideo;
 
 public static class MauiProgram
@@ -18,7 +19,8 @@ public static class MauiProgram
 #if DEBUG
 		builder.Logging.AddDebug();
 #endif
-
-		return builder.Build();
+        builder.Services.AddTransient<SendVideoOverTCPLib.ViewModels.NetworkViewModel>();
+        builder.Services.AddTransient<MainPage>();
+        return builder.Build();
 	}
 }

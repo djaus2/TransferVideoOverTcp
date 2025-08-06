@@ -2,7 +2,7 @@
   "profiles": {
     "GetVideo": {
       "commandName": "Project",
-      "commandLineArgs": "--heLP"
+      "commandLineArgs": "-f c:\\temp\\vid2 -p 9870"
     }
   }
 }

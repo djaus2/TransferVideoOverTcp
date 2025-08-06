@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.13.35825.156
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GetVideo", "GetVideo\GetVideo.csproj", "{29272120-100D-4C8B-8A72-54570409CFAE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GetVideoApp", "GetVideo\GetVideoApp.csproj", "{29272120-100D-4C8B-8A72-54570409CFAE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SendVideo", "SendVideo\SendVideo.csproj", "{47CC5D39-9CDB-457D-B984-999708F33EB6}"
 EndProject

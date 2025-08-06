@@ -14,7 +14,7 @@
 		<ApplicationTitle>SendVideo</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.companyname.sendvideo</ApplicationId>
+		<ApplicationId>au.com.sportronics.sendvideo</ApplicationId>
 
 		<!-- Versions -->
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
