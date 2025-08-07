@@ -16,6 +16,8 @@ Transfer a video locally from an Android phone to Windows Desktop over TCP.
   - UI includes selection of file from the folder
 - SendVideoOverTcpLib
   - MAUI Library used by SendVideo to implement sending of video file over TCP
+  - ***New*** GetVideoWPF  A WPF desktop app to manage reception of video files like teh Console app.
+    - 
  
 ## Notes
 - The filename of the source file is sent and used when saving the the received file.
