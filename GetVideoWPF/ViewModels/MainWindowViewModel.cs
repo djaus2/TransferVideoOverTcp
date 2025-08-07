@@ -68,6 +68,9 @@ public partial class MainWindowViewModel : ObservableObject, IDisposable
     private bool _isVideoDownloading;
 
     [ObservableProperty]
+    private bool _isBusy;
+
+    [ObservableProperty]
     private string _currentDownloadFile = "";
 
     private System.Timers.Timer? _logMonitorTimer;
@@ -92,7 +95,7 @@ public partial class MainWindowViewModel : ObservableObject, IDisposable
     {
         try
         {
-            IsVideoDownloading = true;
+            IsBusy = true;
             CurrentDownloadFile = "Starting service...";
             StatusMessage = "Starting service...";
             
@@ -119,7 +122,7 @@ public partial class MainWindowViewModel : ObservableObject, IDisposable
         }
         finally
         {
-            IsVideoDownloading = false;
+            IsBusy = false;
         }
     }
 
@@ -128,7 +131,7 @@ public partial class MainWindowViewModel : ObservableObject, IDisposable
     {
         try
         {
-            IsVideoDownloading = true;
+            IsBusy = true;
             CurrentDownloadFile = "Stopping service...";
             StatusMessage = "Stopping service...";
             
@@ -143,7 +146,7 @@ public partial class MainWindowViewModel : ObservableObject, IDisposable
         }
         finally
         {
-            IsVideoDownloading = false;
+            IsBusy = false;
         }
     }
 
@@ -163,7 +166,7 @@ public partial class MainWindowViewModel : ObservableObject, IDisposable
             if (result != System.Windows.MessageBoxResult.Yes)
                 return;
 
-            IsVideoDownloading = true;
+            IsBusy = true;
             CurrentDownloadFile = "Installing service...";
             StatusMessage = "Installing service...";
             
@@ -194,7 +197,7 @@ public partial class MainWindowViewModel : ObservableObject, IDisposable
         }
         finally
         {
-            IsVideoDownloading = false;
+            IsBusy = false;
         }
     }
 
@@ -215,7 +218,7 @@ public partial class MainWindowViewModel : ObservableObject, IDisposable
             if (result != System.Windows.MessageBoxResult.Yes)
                 return;
 
-            IsVideoDownloading = true;
+            IsBusy = true;
             CurrentDownloadFile = "Uninstalling service...";
             StatusMessage = "Uninstalling service...";
             
@@ -245,7 +248,7 @@ public partial class MainWindowViewModel : ObservableObject, IDisposable
         }
         finally
         {
-            IsVideoDownloading = false;
+            IsBusy = false;
         }
     }
 
