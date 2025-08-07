@@ -18,6 +18,7 @@ Transfer a video locally from an Android phone to Windows Desktop over TCP.
     - MAUI Library used by SendVideo to implement sending of video file over TCP
 - :new: :running: **GetVideoWPF**  A WPF desktop app to manage reception of video files like the Console app. (Some rough edges)
   - :new: **GetVideoService** A Windowws service that is used by GetVideo to manage the reception of files.
+  - **NOTE: MAY NEED TO RUN THIS WITH ELEVATED PRIVLEDGES IS SERVICE ISN't RUNNING**
  
 ## Notes
 - The filename of the source file is sent and used when saving the the received file.
