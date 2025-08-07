@@ -2,6 +2,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using DownloadVideoOverTCPLib;
+using GetVideoService.Services;
 using System.Net;
 using System.Net.Sockets;
 
@@ -11,12 +12,14 @@ public class VideoDownloadWorker : BackgroundService
 {
     private readonly ILogger<VideoDownloadWorker> _logger;
     private readonly ServiceSettings _settings;
+    private readonly IServiceEventNotifier _eventNotifier;
     private CancellationTokenSource? _downloadCancellationTokenSource;
 
-    public VideoDownloadWorker(ILogger<VideoDownloadWorker> logger, IOptions<ServiceSettings> settings)
+    public VideoDownloadWorker(ILogger<VideoDownloadWorker> logger, IOptions<ServiceSettings> settings, IServiceEventNotifier eventNotifier)
     {
         _logger = logger;
         _settings = settings.Value;
+        _eventNotifier = eventNotifier;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -60,13 +63,16 @@ public class VideoDownloadWorker : BackgroundService
 
         try
         {
-            await Task.Run(() =>
+            await Task.Run(async () =>
             {
                 while (!_downloadCancellationTokenSource.Token.IsCancellationRequested)
                 {
                     try
                     {
                         _logger.LogInformation("Waiting for video download connection...");
+                        
+                        // Notify that download is starting
+                        await _eventNotifier.NotifyVideoDownloadStarted("Incoming video...");
                         
                         // Redirect Console output to capture library messages
                         var originalOut = Console.Out;
@@ -94,16 +100,27 @@ public class VideoDownloadWorker : BackgroundService
                         
                         if (!string.IsNullOrEmpty(filePath))
                         {
+                            var fileName = Path.GetFileName(filePath);
                             _logger.LogInformation("Video file received: {FilePath}", filePath);
+                            
+                            // Notify that download completed successfully
+                            await _eventNotifier.NotifyVideoDownloadCompleted(fileName);
                         }
                         else
                         {
                             _logger.LogWarning("Video download failed or was cancelled");
+                            
+                            // Notify that download failed
+                            await _eventNotifier.NotifyVideoDownloadFailed("Unknown", "Download failed or was cancelled");
                         }
                     }
                     catch (Exception ex)
                     {
                         _logger.LogError(ex, "Error during video download");
+                        
+                        // Notify that download failed with error
+                        await _eventNotifier.NotifyVideoDownloadFailed("Unknown", ex.Message);
+                        
                         // Add a delay before retrying to prevent rapid failures
                         Task.Delay(5000, _downloadCancellationTokenSource.Token).Wait();
                     }

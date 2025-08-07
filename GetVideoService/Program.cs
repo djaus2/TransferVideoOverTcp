@@ -3,6 +3,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using GetVideoService;
+using GetVideoService.Services;
 
 // Configure Serilog
 Log.Logger = new LoggerConfiguration()
@@ -26,6 +27,9 @@ try
 
     // Register the worker service
     builder.Services.AddHostedService<VideoDownloadWorker>();
+    
+    // Register event notifier service
+    builder.Services.AddSingleton<IServiceEventNotifier, ServiceEventNotifier>();
 
     // Add configuration
     builder.Services.Configure<ServiceSettings>(builder.Configuration.GetSection("ServiceSettings"));

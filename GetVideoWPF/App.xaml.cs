@@ -27,6 +27,7 @@ public partial class App : System.Windows.Application
                 // Register Services
                 services.AddSingleton<IServiceControlService, ServiceControlService>();
                 services.AddSingleton<IVideoDownloadService, VideoDownloadService>();
+                services.AddSingleton<IServiceEventListener, ServiceEventListener>();
                 
                 // Register MainWindow
                 services.AddTransient<MainWindow>();

@@ -14,6 +14,7 @@ public partial class MainWindowViewModel : ObservableObject, IDisposable
 {
     private readonly IServiceControlService _serviceControlService;
     private readonly IVideoDownloadService _videoDownloadService;
+    private readonly IServiceEventListener _serviceEventListener;
 
     [ObservableProperty]
     private string _serviceStatus = "Unknown";
@@ -78,16 +79,25 @@ public partial class MainWindowViewModel : ObservableObject, IDisposable
     private DateTime _lastDownloadActivity = DateTime.MinValue;
     private FileSystemWatcher? _fileWatcher;
 
-    public MainWindowViewModel(IServiceControlService serviceControlService, IVideoDownloadService videoDownloadService)
+    public MainWindowViewModel(IServiceControlService serviceControlService, IVideoDownloadService videoDownloadService, IServiceEventListener serviceEventListener)
     {
         _serviceControlService = serviceControlService;
         _videoDownloadService = videoDownloadService;
+        _serviceEventListener = serviceEventListener;
+        
+        // Subscribe to service events
+        _serviceEventListener.VideoDownloadStarted += OnVideoDownloadStarted;
+        _serviceEventListener.VideoDownloadCompleted += OnVideoDownloadCompleted;
+        _serviceEventListener.VideoDownloadFailed += OnVideoDownloadFailed;
         
         LoadLocalIpAddress();
         RefreshServiceStatus();
         RefreshDownloadedFiles();
         InitializeLogMonitoring();
         SetupFileWatcher(DownloadFolder); // Initialize file watcher for current folder
+        
+        // Start listening for service events
+        _ = Task.Run(async () => await _serviceEventListener.StartListening());
     }
 
     [RelayCommand]
@@ -712,6 +722,40 @@ public partial class MainWindowViewModel : ObservableObject, IDisposable
         }
     }
 
+    // Event handlers for service notifications
+    private void OnVideoDownloadStarted(object? sender, VideoDownloadEventArgs e)
+    {
+        System.Windows.Application.Current.Dispatcher.Invoke(() =>
+        {
+            IsVideoDownloading = true;
+            CurrentDownloadFile = $"Downloading: {e.FileName}";
+            StatusMessage = "Video download started";
+        });
+    }
+
+    private void OnVideoDownloadCompleted(object? sender, VideoDownloadEventArgs e)
+    {
+        System.Windows.Application.Current.Dispatcher.Invoke(() =>
+        {
+            IsVideoDownloading = false;
+            CurrentDownloadFile = "";
+            StatusMessage = $"Download completed: {e.FileName}";
+            
+            // Refresh the file list
+            RefreshDownloadedFiles();
+        });
+    }
+
+    private void OnVideoDownloadFailed(object? sender, VideoDownloadEventArgs e)
+    {
+        System.Windows.Application.Current.Dispatcher.Invoke(() =>
+        {
+            IsVideoDownloading = false;
+            CurrentDownloadFile = "";
+            StatusMessage = $"Download failed: {e.Error ?? "Unknown error"}";
+        });
+    }
+
     // Implement IDisposable to clean up timer
     private bool _disposed = false;
 
@@ -721,6 +765,12 @@ public partial class MainWindowViewModel : ObservableObject, IDisposable
         {
             if (disposing)
             {
+                // Unsubscribe from events
+                _serviceEventListener.VideoDownloadStarted -= OnVideoDownloadStarted;
+                _serviceEventListener.VideoDownloadCompleted -= OnVideoDownloadCompleted;
+                _serviceEventListener.VideoDownloadFailed -= OnVideoDownloadFailed;
+                _serviceEventListener.StopListening();
+                
                 _logMonitorTimer?.Stop();
                 _logMonitorTimer?.Dispose();
                 _fileWatcher?.Dispose();
