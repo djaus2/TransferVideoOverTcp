@@ -84,7 +84,8 @@
             </Grid.RowDefinitions>
 
         <!-- Service Control Section -->
-        <GroupBox Header="Service Control" Grid.Row="0" Margin="0,0,0,10">
+        <GroupBox Header="Service Control" Grid.Row="0" Margin="0,0,0,10"
+                  IsEnabled="{Binding IsServiceInstalled}">
             <Grid Margin="10">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -136,7 +137,8 @@
         </GroupBox>
 
         <!-- Manual Listening Control -->
-        <GroupBox Header="Manual Listening Control" Grid.Row="2" Margin="0,0,0,10">
+        <GroupBox Header="Manual Listening Control" Grid.Row="2" Margin="0,0,0,10" 
+                  IsEnabled= "{Binding IsServiceRunning}">
             <StackPanel Orientation="Horizontal" Margin="10">
                 <Button Content="Start Listening" Command="{Binding StartListeningCommand}" Margin="0,0,10,0" Padding="10,5" IsEnabled="{Binding IsListening, Converter={StaticResource InverseBooleanConverter}}"/>
                 <Button Content="Stop Listening" Command="{Binding StopListeningCommand}" Margin="0,0,10,0" Padding="10,5" IsEnabled="{Binding IsListening}"/>

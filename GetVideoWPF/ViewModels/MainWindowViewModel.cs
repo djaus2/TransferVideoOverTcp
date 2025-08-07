@@ -65,10 +65,10 @@ public partial class MainWindowViewModel : ObservableObject, IDisposable
     private string _statusMessage = "Ready";
 
     [ObservableProperty]
-    private bool _isVideoDownloading;
+    private bool _isVideoDownloading = false;
 
     [ObservableProperty]
-    private bool _isBusy;
+    private bool _isBusy = false;
 
     [ObservableProperty]
     private string _currentDownloadFile = "";
