@@ -8,6 +8,7 @@ Transfer a video locally from an Android phone to Windows Desktop over TCP.
 ## Projects
 - GetVideo
   - Console app that receives the video
+  - Uses NuGet Packae  [Sportronics.ConfigurationManager](https://www.nuget.org/packages/Sportronics.ConfigurationManager) to handle command line options
 -  DownloadVideoOverTcpLib
     - Library used by Console app to implement reception of the video file over TCP.
 - SendVideo
