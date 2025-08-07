@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DownloadVideoOverTcpLib", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SendVideoOverTcpLib", "SendVideoOverTCPLib\SendVideoOverTcpLib.csproj", "{F0537CD1-F6F2-4219-A154-843D71F26E0A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GetVideoService", "GetVideoService\GetVideoService.csproj", "{B8E3C9D2-4A1B-4E5F-9C7A-2D8F6E4B3A5C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GetVideoWPF", "GetVideoWPF\GetVideoWPF.csproj", "{A7F2B8C3-5D4E-4F6A-8B9C-1E5F7D8A9B2C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,6 +38,14 @@ Global
 		{F0537CD1-F6F2-4219-A154-843D71F26E0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F0537CD1-F6F2-4219-A154-843D71F26E0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F0537CD1-F6F2-4219-A154-843D71F26E0A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8E3C9D2-4A1B-4E5F-9C7A-2D8F6E4B3A5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8E3C9D2-4A1B-4E5F-9C7A-2D8F6E4B3A5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8E3C9D2-4A1B-4E5F-9C7A-2D8F6E4B3A5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8E3C9D2-4A1B-4E5F-9C7A-2D8F6E4B3A5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7F2B8C3-5D4E-4F6A-8B9C-1E5F7D8A9B2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7F2B8C3-5D4E-4F6A-8B9C-1E5F7D8A9B2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7F2B8C3-5D4E-4F6A-8B9C-1E5F7D8A9B2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7F2B8C3-5D4E-4F6A-8B9C-1E5F7D8A9B2C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
