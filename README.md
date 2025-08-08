@@ -5,6 +5,10 @@
 ## About
 Transfer a video locally from an Android phone to Windows Desktop over TCP.
 
+----
+> Better WPF app coming tomorrow.  Doesn't use Windows Service but uses in-app only Tcp service.
+----
+
 ## Projects
 - :movie_camera: **GetVideo**
   - Console app that receives the video
