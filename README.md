@@ -61,4 +61,4 @@ Start-Process ".\GetVideoWPF.exe" -Verb  RunAs
 - The Port used for the TCP connection can be set in the appsettings.json file for the Windows Service and WPF apps.
   - Also can be set in the UI of the WPF apps.
   - It is a command line option for the Console app.
-- SEndVideo uses a configurable TimeOut for sends _(default 15 seconds)_.
+- SendVideo uses a configurable TimeOut for sends _(default 15 seconds)_.
