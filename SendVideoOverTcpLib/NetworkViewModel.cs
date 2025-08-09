@@ -35,15 +35,18 @@ namespace SendVideoOverTCPLib.ViewModels
         private int endHostId = 20;
 
         [ObservableProperty]
-        private int timeoutInHalfSeconds = 6;
+        private int pingTimeoutInHalfSeconds = 6;
 
         [ObservableProperty]
-        private int timeoutInMs = 500;
+        private int pingTimeoutInMs = 500;
 
-        public int TimeOut { get { return TimeoutInHalfSeconds * TimeoutInMs; } }
+        public int PingTimeOut { get { return PingTimeoutInHalfSeconds * PingTimeoutInMs; } }
 
         [ObservableProperty]
         private ObservableCollection<string> activeIPs = new();
+
+        [ObservableProperty]
+        private int downloadTimeoutInSec = 15;
 
         /*
         public ObservableCollection<string> ActiveIPs

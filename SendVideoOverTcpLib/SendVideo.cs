@@ -12,10 +12,16 @@ namespace SendVideoOverTCPLib
     // All the code in this file is included in all platforms.
     public static class SendVideo
     {
+ 
         /*public static int MaxIPAddress { get; set; } = 20;
         public static int MinIPAddress { get; set; } = 2;  //Router is often XX.YY.ZZ.1
         public static int TimeoutInHalfSeconds { get; set; } = 6;*/
-        public static NetworkViewModel NetworkViewModel = new();
+        public static NetworkViewModel? NetworkViewModel { 
+            get; 
+            set; 
+        } 
+
+
 
         public static async Task OnSendMovieFileClicked(NetworkViewModel _networkViewModel)
         {
@@ -23,7 +29,22 @@ namespace SendVideoOverTCPLib
             if (file is null)
                 return;
 
-            await SendFileWithChecksumAsync(file.FullPath, NetworkViewModel.SelectedIpAddress, NetworkViewModel.SelectedPort); // Use desktop's LAN IP
+            try
+            {
+                // Set busy state to show the indicator
+                await SendFileWithChecksumAsync(file.FullPath, _networkViewModel.SelectedIpAddress, _networkViewModel.SelectedPort);
+            }
+            catch (Exception ex)
+            {
+                // Show error popup
+                await Application.Current.MainPage.DisplayAlert("Connection Error",
+                    $"Could not connect to receiver. Please ensure the receiver app is running and listening on port {_networkViewModel.SelectedPort}.",
+                    "OK");
+            }
+            finally
+            {
+                // Always clear busy state when done
+            }
         }
 
         private static async Task<FileResult?> PickMovieFileAsync()
@@ -44,8 +65,30 @@ namespace SendVideoOverTCPLib
 
         public static async Task SendFileWithChecksumAsync(string filePath, string ipAddress, int port)
         {
+
             using var client = new TcpClient();
-            await client.ConnectAsync(IPAddress.Parse(ipAddress), port);
+            try
+            {
+                // Get the configurable timeout from NetworkViewModel - access directly from the static instance
+                int timeoutMs = SendVideo.NetworkViewModel.DownloadTimeoutInSec*1000;
+
+                // Set a connection timeout based on the configurable setting
+                var connectTask = client.ConnectAsync(IPAddress.Parse(ipAddress), port);
+
+                // Wait for connection with configurable timeout
+                if (await Task.WhenAny(connectTask, Task.Delay(timeoutMs)) != connectTask)
+                {
+                    // Connection timed out
+                    throw new TimeoutException($"Connection to {ipAddress}:{port} timed out after {timeoutMs/1000} seconds. Please ensure the receiver is listening.");
+                }
+
+                // Make sure the connection task completed successfully
+                await connectTask;
+            }
+            catch (SocketException ex)
+            {
+                throw new Exception("Failed to connect to receiver", ex);
+            }
             using var stream = client.GetStream();
 
             // Send filename
@@ -86,7 +129,7 @@ namespace SendVideoOverTCPLib
             {
                 string ip = $"{subnet}{i}";
                 using var ping = new Ping();
-                var reply = await ping.SendPingAsync(ip, NetworkViewModel.TimeoutInMs);
+                var reply = await ping.SendPingAsync(ip, NetworkViewModel.PingTimeoutInMs);
                 if (reply.Status == IPStatus.Success)
                 {
                     if(ip != localIP) // Exclude the local IP
@@ -174,7 +217,7 @@ namespace SendVideoOverTCPLib
                 using var ping = new Ping();
                 try
                 {
-                    var reply = await ping.SendPingAsync(savedIp, NetworkViewModel.TimeoutInHalfSeconds * 500);
+                    var reply = await ping.SendPingAsync(savedIp, NetworkViewModel.PingTimeoutInHalfSeconds * 500);
                     if (reply.Status == IPStatus.Success)
                     {
                         return savedIp;

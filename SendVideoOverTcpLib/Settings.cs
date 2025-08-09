@@ -15,8 +15,9 @@ public static class Settings
         Preferences.Set("Port", networkViewModel.SelectedPort);
         Preferences.Set("StartHostId", networkViewModel.StartHostId);
         Preferences.Set("EndHostId", networkViewModel.EndHostId);
-        Preferences.Set("TimeoutInHalfSeconds", networkViewModel.TimeoutInHalfSeconds); 
-        Preferences.Set("TimeoutInMs", networkViewModel.TimeoutInMs); 
+        Preferences.Set("TimeoutInHalfSeconds", networkViewModel.PingTimeoutInHalfSeconds);
+        Preferences.Set("TimeoutInMs", networkViewModel.PingTimeoutInMs);
+        Preferences.Set("DownloadTimeoutInSec", networkViewModel.DownloadTimeoutInSec);
     }
 
     public static NetworkViewModel GetSettingNetworkViewModel()
@@ -27,8 +28,9 @@ public static class Settings
             SelectedPort = GetSettingSelectedPort() > 0 ? GetSettingSelectedPort() : 5000,
             StartHostId = GetSettingStartHostId(),
             EndHostId = GetSettingEndHostId(),
-            TimeoutInHalfSeconds = GetSettingTimeoutInHalfSeconds(),
-            TimeoutInMs = GetSettingTimeoutInMs()
+            PingTimeoutInHalfSeconds = GetSettingTimeoutInHalfSeconds(),
+            PingTimeoutInMs = GetSettingTimeoutInMs(),
+            DownloadTimeoutInSec = GetSettingDownloadTimeoutInSec()
         };
         return networkViewModel;
     }
@@ -73,6 +75,10 @@ public static class Settings
     {
         return Preferences.Get("GTimeoutInMs", 500);
     }
+    public static int GetSettingDownloadTimeoutInSec()
+    {
+        return Preferences.Get("DownloadTimeoutInSec", 15);
+    }
 
     public static void ClearAllPreferences()
     {
@@ -83,8 +89,10 @@ public static class Settings
     {
         int startHostId = GetSettingStartHostId();
         int endHostId = GetSettingEndHostId();
+        int downloadTimeoutInSec = GetSettingDownloadTimeoutInSec();
         Preferences.Clear();
         Preferences.Set("StartHostId", startHostId);
         Preferences.Set("EndHostId", endHostId);
+        Preferences.Set("DownloadTimeoutInSec", downloadTimeoutInSec);
     }
 }

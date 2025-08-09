@@ -22,12 +22,16 @@ namespace SendVideo
         protected override async void OnAppearing()
         {
             base.OnAppearing();
+           ;
             grid.IsVisible = false;
             BusyIndicatorLabel.Text = $"Getting saved Target Host ID or Local active Ids to select from if no setting (slower).";
             BusyIndicatorLabel.IsVisible = true;
             BusyIndicator.IsVisible = true;
             BusyIndicator.IsRunning = true;
-            var ipaddress =  await SendVideoOverTCPLib.SendVideo.GetSettings();
+            if (SendVideoOverTCPLib.SendVideo.NetworkViewModel == null) //Returning to this page
+            {
+                var ipaddress = await SendVideoOverTCPLib.SendVideo.GetSettings();
+            }
             this.BindingContext = SendVideoOverTCPLib.SendVideo.NetworkViewModel;
             BusyIndicator.IsRunning = false;
             BusyIndicator.IsVisible = false;
@@ -58,11 +62,20 @@ namespace SendVideo
         private async void OnSendMovieFileClicked(object sender, EventArgs e)
         {
             NetworkViewModel networkViewModel = (NetworkViewModel)BindingContext;
+            grid.IsVisible = false;
+            BusyIndicatorLabel.Text = $"Selecting video file then downloading it. Make sure Recvr is listening. Download timeout is {Math.Round((decimal)networkViewModel.DownloadTimeoutInSec)} sec";
+            BusyIndicatorLabel.IsVisible = true;
+            BusyIndicator.IsVisible = true;
+            BusyIndicator.IsRunning = true;
             await SendVideoOverTCPLib.SendVideo.OnSendMovieFileClicked(networkViewModel);
-            
+            BusyIndicator.IsRunning = false;
+            BusyIndicator.IsVisible = false;
+            BusyIndicatorLabel.IsVisible = false;
+            grid.IsVisible = true;
+
             //var file = await PickMovieFileAsync();
             //if (file is null)
-                //return;
+            //return;
             //var ipAddress = networkViewModel.SelectedIP;
             //await SendFileWithChecksumAsync(file.FullPath, ipAddress, 5000); // Use desktop's LAN IP
             /*var fileBytes = File.ReadAllBytes(file.FullPath);
@@ -235,6 +248,42 @@ namespace SendVideo
             BusyIndicator.IsVisible = false;
             BusyIndicatorLabel.IsVisible = false;
             grid.IsVisible = true;
+        }
+
+        private async void OnSetTimeoutClicked(object sender, EventArgs e)
+        {
+            // Get the current timeout in seconds
+            NetworkViewModel networkViewModel = (NetworkViewModel)BindingContext;
+            int currentTimeoutSeconds = networkViewModel.DownloadTimeoutInSec / 1000;
+            
+            // Show prompt for new timeout value
+            string result = await DisplayPromptAsync(
+                "Set Connection Timeout", 
+                "Enter timeout in seconds:",
+                initialValue: currentTimeoutSeconds.ToString(),
+                maxLength: 5,
+                keyboard: Keyboard.Numeric);
+            
+            // Process the result
+            if (result != null && int.TryParse(result, out int newTimeoutSeconds) && newTimeoutSeconds > 0)
+            {
+                // Update the timeout value (convert seconds to milliseconds)
+                networkViewModel.DownloadTimeoutInSec = newTimeoutSeconds * 1000;
+                
+                // Show confirmation
+                await DisplayAlert(
+                    "Timeout Updated", 
+                    $"Connection timeout set to {newTimeoutSeconds} seconds.", 
+                    "OK");
+            }
+            else if (result != null)
+            {
+                // Show error for invalid input
+                await DisplayAlert(
+                    "Invalid Input", 
+                    "Please enter a positive number for the timeout in seconds.", 
+                    "OK");
+            }
         }
     }
 

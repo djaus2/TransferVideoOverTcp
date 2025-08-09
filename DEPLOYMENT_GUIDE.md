@@ -5,16 +5,17 @@
 This solution contains multiple projects for transferring video over TCP:
 
 ### Existing Projects
-- **DownloadVideoOverTcpLib**: Core library for video downloading functionality
-- **GetVideoApp**: Original console application
+- **DownloadVideoOverTcpLib**: Core library for video downloading functionality over Tcp
+- **GetVideoConsoleApp**: Original console application
 - **SendVideo**: MAUI mobile application for sending videos
-- **SendVideoOverTcpLib**: Library for sending video functionality
+- **SendVideoOverTcpLib**: MAUI Library for sending video functionality
 
-### New Projects Created
+### Recently Projects Created
 - **GetVideoService**: Windows Service for continuous video downloading
-- **GetVideoWPF**: WPF management application for controlling the service
+- **GetVideoViaSvcWPF**: WPF management application for video downloading with Tcp Service using Windows Service ***GetVideoService***..
+- **GetVideoInAppWPF**: WPF application for video downloading with Tcp Service running In-App.
 
-## Project Structure
+## Project Structure _(To be updated)_
 
 ```
 TransferVideoOverTcp/
@@ -36,14 +37,22 @@ TransferVideoOverTcp/
 
 ## Features
 
+### GetVideoConsoleApp (Original Console App)
+- Simple console application for video downloading
+- Starts listening for video transfers on a specified port
+- Once a video is received, it saves the file to a specified directory
+- Then stops the service and exits
+
 ### GetVideoService (Windows Service)
 - Runs as a Windows background service
 - Automatically starts video downloads when TCP connections are received
 - Configurable through appsettings.json
 - Logs to Windows Event Log and file system
 - Self-contained deployment ready
+- Can be installed via next app or using InstallService.bat
+- Note that installation doesn't normally need elevated privileges, but starting the service does require Administrator rights.
 
-### GetVideoWPF (Management Application)
+### GetVideoViaSvcWPF (Management Application)
 - Modern WPF interface using MVVM pattern
 - **Service menu with Install/Uninstall options**
 - Service management (Start/Stop/Install/Uninstall)
@@ -51,6 +60,27 @@ TransferVideoOverTcp/
 - Real-time status monitoring
 - Settings configuration
 - Confirmation dialogs for critical operations
+
+### GetVideoInAppWPF (In-App WPF Application)
+- As per the Console app , but with largely same UI as GetVideoViaSvcWPF
+- No Install/Uninstall options for service as it runs in app.
+- A download does not trigger service stop nor app exit.
+- Has a brief popup after each download
+
+## MAUII
+
+### SendVideo (MAUI Application)
+- Mobile application for sending videos from Android devices
+- Sends *.mp4 videos*
+- Can configure port used and Tcp connection timeout
+- Select target from local devices that can be pinged.
+  - They need to accept being pinged
+- Remembers previous settings
+- Popup notification after each successful send
+- Popup notification if device does't connect after timeout *(default 15 sec)*
+
+### SendVideoOverTcpLib (MAUI Library)
+- Core library for sending video files over TCP
 
 ## Installation Instructions
 
@@ -65,7 +95,8 @@ dotnet build --configuration Release
 #### Option A: Using WPF Application (Recommended)
 1. Launch GetVideoWPF.exe (no need to run as Administrator)
 2. Go to Service → Install Service
-3. **The system will automatically prompt for Administrator privileges (UAC)**
+3. **The system will automatically prompt for Administrator privileges (UAC)*
+  - If accepted Visual Studio restarts in elevated mode and the service is installed
 4. Confirm the UAC elevation when prompted
 5. Confirm the installation when prompted
 6. The service will be installed and ready to start
@@ -81,7 +112,7 @@ dotnet build --configuration Release
 ### 3. Start the WPF Management Application
 ```powershell
 cd GetVideoWPF\bin\Release\net9.0-windows
-.\GetVideoWPF.exe
+.\GetVideoWPF.exe -verb runas
 ```
 
 ## Configuration
