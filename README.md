@@ -10,27 +10,29 @@ Transfer a video locally from an Android phone to Windows Desktop over TCP.
 ----
 
 ## Projects
-- :movie_camera: **GetVideoConsole**
+- :video_camera:  **GetVideoConsole**
   - Console app that receives the video
     - Uses NuGet Packae  [Sportronics.ConfigurationManager](https://www.nuget.org/packages/Sportronics.ConfigurationManager) to handle command line options
-  - **DownloadVideoOverTcpLib**
+  - :small_airplane: **DownloadVideoOverTcpLib**
     - Library used by Console app to implement reception of the video file over TCP.
-- :video_camera: **SendVideo**
+- :telephone: **SendVideo**
   - MAUI Android phone app to send video from /Movies folder
     - UI includes selection of file from the folder
-  - **SendVideoOverTcpLib**
+  - :postbox: **SendVideoOverTcpLib**
     - MAUI Library used by SendVideo to implement sending of video file over TCP
-- :new: :running: **GetVideoViaSvcWPF**  A WPF desktop app to manage reception of video files like the Console app. _(Some rough edges)_
-  - :new: **GetVideoService** A Windowws service that is used by GetVideo to manage the reception of files.
+- :new: :satellite: **GetVideoViaSvcWPF**  A WPF desktop app to manage reception of video files like the Console app. _(Some rough edges)_
+  - :new:   :post_office: **GetVideoService** A Windowws service that is used by GetVideo to manage the reception of files.
   - **NOTE: MAY NEED TO RUN THIS WITH ELEVATED PRIVLEDGES IS SERVICE ISN't RUNNING** *See next section.*
-  - **GetVideoService** is a Windows Service that runs in the background to receive video files over TCP.
+  -  **GetVideoService** is a Windows Service that runs in the background to receive video files over TCP.
+  -  Uses ***DownloadVideoOverTcpLib***
     - It can be installed/uninstalled via the WPF app or manually using the provided batch script.
     - It listens for incoming video transfers and saves them to a specified directory.
     - Uses `appsettings.json` for configuration.
-- :new: :running: **GetVideoInAppWPF** A WPF desktop app to manage reception of video files like the Console app. _(No rough edges)_
+- :new: :telephone_receiver: **GetVideoInAppWPF** A WPF desktop app to manage reception of video files like the Console app. _(No rough edges)_
   - This app runs a Tcp service in-app and does not require a separate Windows Service.
+  - Uses ***DownloadVideoOverTcpLib***
   - It has similar UI and functionality to GetVideoViaSvcWPF but without the service management features.
-  - Aso similar to the Console app but does not stop Tcp service nor exit the app after a download is complete.
+  - Also similar to the Console app but does not stop Tcp service nor exit the app after a download is complete.
 
 ## Running GetVideoViasSvcWPF in Elevated Mode.
 Install/Uninstall does not require elevated mode. To Start the sevice though, you need to be in elevated mode.
