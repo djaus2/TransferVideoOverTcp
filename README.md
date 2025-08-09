@@ -6,7 +6,7 @@
 Transfer a video locally from an Android phone to Windows Desktop over TCP.
 
 ----
-> Better WPF app coming tomorrow.  Doesn't use Windows Service but uses in-app only Tcp service.
+> Better WPF app  ***GetVideoInAppWPF*** now available.  Doesn't use Windows Service but uses in-app only Tcp service.
 ----
 
 ## Projects
@@ -21,13 +21,15 @@ Transfer a video locally from an Android phone to Windows Desktop over TCP.
   - :postbox: **SendVideoOverTcpLib**
     - MAUI Library used by SendVideo to implement sending of video file over TCP
 - :new: :satellite: **GetVideoViaSvcWPF**  A WPF desktop app to manage reception of video files like the Console app. _(Some rough edges)_
-  - :new:   :post_office: **GetVideoService** A Windowws service that is used by GetVideo to manage the reception of files.
-  - **NOTE: MAY NEED TO RUN THIS WITH ELEVATED PRIVLEDGES IS SERVICE ISN't RUNNING** *See next section.*
-  -  **GetVideoService** is a Windows Service that runs in the background to receive video files over TCP.
-  -  Uses ***DownloadVideoOverTcpLib***
+  - Uses ***GetVideoService***
+  - It listens for incoming video transfers and saves them to a specified directory.
+  - Uses `appsettings.json` for configuration.
+  - :new:   :post_office: **GetVideoService** A Windowws service that is used by GetVideoViaSvcWPF to manage the reception of files.
+    - **NOTE: MAY NEED TO RUN THIS WITH ELEVATED PRIVLEDGES IS SERVICE ISN't RUNNING** *See next section.*
+    -  **GetVideoService** is a Windows Service that runs in the background to receive video files over TCP.
+    -  Uses ***DownloadVideoOverTcpLib***
     - It can be installed/uninstalled via the WPF app or manually using the provided batch script.
-    - It listens for incoming video transfers and saves them to a specified directory.
-    - Uses `appsettings.json` for configuration.
+
 - :new: :telephone_receiver: **GetVideoInAppWPF** A WPF desktop app to manage reception of video files like the Console app. _(No rough edges)_
   - This app runs a Tcp service in-app and does not require a separate Windows Service.
   - Uses ***DownloadVideoOverTcpLib***
