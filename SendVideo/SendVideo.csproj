@@ -9,6 +9,7 @@
 		<SingleProject>true</SingleProject>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+		<PackageLicenseExpression>CC0-1.0</PackageLicenseExpression>
 
 		<!-- Display name -->
 		<ApplicationTitle>SendVideo</ApplicationTitle>
