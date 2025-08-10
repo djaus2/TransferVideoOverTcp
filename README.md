@@ -6,7 +6,7 @@
 Transfer a video locally from an Android phone to Windows Desktop over TCP.
 
 ----
-> *Coming:* ***GetVideoWPFLib***  and ***GetVideoWPFLibSample***
+> *Coming:* ***GetVideoWPFLib***  and ***GetVideoWPFLibSample***  
 > Better WPF app  ***GetVideoInAppWPF*** now available.  Doesn't use Windows Service but uses in-app only Tcp service.
 ----
 
