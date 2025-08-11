@@ -365,3 +365,24 @@ FodyWeavers.xsd
 /query
 /start
 /stop
+
+# Secret files
+secrets.json
+appsettings.Development.json
+appsettings.Production.json
+*.pfx
+*.key
+publish-secrets.json
+nuget-api-key.txt
+
+# Local development configuration
+launchSettings.json
+
+# Logs
+*.log
+/GetVideoWPFLib/Nuget.txt
+/GetVideoWPFLib/nuget.md
+/GetVideoWPFLib/GetVideoWPFLib.xml
+/DownloadVideoOverTcpLib/Nuget.txt
+/secrets.json.template
+/.github/workflows/build-and-publish.yml
