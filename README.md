@@ -12,7 +12,7 @@ Transfer a video locally from an Android phone to Windows Desktop over TCP.
   - Also as a NuGet package [Sportronics.GetVideoWPFLib](https://www.nuget.org/packages/Sportronics.GetVideoWPFLib)
   - Looks and feels just like the ***GetVideoInAppWPF*** app when used in an app as below.
   - Uses NuGet package [Sportronics.DownloadVideoOverTcpLib](https://www.nuget.org/packages/Sportronics.DownloadVideoOverTcpLib) rather than the local source here.
--  :running: **GetVideoWPFLibSample** A WPF app that uses that NuGet pacakge *but could be reconfigured to use the lib source here**.
+-  :running: **GetVideoWPFLibSample** A WPF app that uses that NuGet pacakge *but could be reconfigured to use the lib source here*.
   
 ----
 
