@@ -5,8 +5,19 @@
     <RootNamespace>DownloadVideo_OverTCPLib</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <PackageLicenseExpression>CC0-1.0</PackageLicenseExpression>
+    <PackageId>Sportronics.DownloadVideoOverTcpLib</PackageId>
+    <Authors>David Jones</Authors>
+    <Company>Sportronics</Company>
+    <Description>A library for downloading videos over TCP. Usage: See the ReadMe. Also, there is a sample app in teh repository.</Description>
+    <PackageTags>configuration;settings;json;commandline</PackageTags>
+    <PackageLicenseExpression>CC-BY-4.0</PackageLicenseExpression>
+    <Version>1..0</Version>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="icon.png" Pack="true" PackagePath="" />
+    <None Include="README.md" Pack="true" PackagePath="" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Include="LICENSE" Pack="true" PackagePath="" />

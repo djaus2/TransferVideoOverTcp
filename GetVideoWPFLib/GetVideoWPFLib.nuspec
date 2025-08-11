@@ -1,0 +1,32 @@
+﻿<?xml version="1.0"?>
+<package>
+  <metadata>
+    <version>1.0.5</version>
+    <authors>David Jones</authors>
+    <owners>David Jones Sportronics</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <copyright>Copyright © 2025 David Jones</copyright>
+    <tags>WPF Video TCP MAUI</tags>
+    <id>Sportronics.GetVideoWPFLib</id>
+    <description>A WPF library for downloading videos over TCP. Usage: See the ReadMe. Also, there is a sample app in teh repository.</description>
+    <summary>A WPF library for downloading videos over TCP. Usage: See the ReadMe. Also, there is a sample app in teh repository.</summary> 
+    <license type="expression">CC-BY-4.0</license>
+    <releaseNotes>
+      v1.0.5 - Including DownloadVideoOverTcpLib in the package. Next Try
+    </releaseNotes>
+
+    <readme>README.md</readme>
+    <repository type="git" url="https://github.com/djaus2/TransferVideoOverTcp" />
+    <dependencies>
+      <!-- Optional: declare LibB as a dependency if it's packaged separately -->
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="icon.png" target="" />
+    <file src="README.md" target="" />
+    <file src="bin\Release\net9.0-windows\GetVideoWPFLib.dll" target="lib\net9.0-windows\" />
+    <file src="bin\Release\net9.0-windows\DownloadVideoOverTcpLib.dll" target="lib\net9.0-windows\" />
+  </files>
+
+  </package>
+

@@ -197,7 +197,7 @@ namespace GetVideoWPFLib.ViewModels
                 IsListening = true;
                 StatusMessage = "Starting listener...";
                 
-                await _videoDownloadService.StartListeningAsync(_downloadFolder, Port, CancellationToken.None);
+                await _videoDownloadService.StartListeningAsync(DownloadFolder, Port, CancellationToken.None);
             }
             catch (Exception ex)
             {

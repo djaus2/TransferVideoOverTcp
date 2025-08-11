@@ -175,4 +175,8 @@ public class CustomVideoDownloadControl : GetVideoWPFLib.Controls.VideoDownloadC
 
 ## License
 
-[Your license information here]
+This project is licensed under the Creative Commons CC0-1.0 Universal License - see the [LICENSE](LICENSE) file for details.
+
+CC0-1.0 is a public domain dedication that allows you to freely use, modify, and distribute this code without any restrictions.
+
+

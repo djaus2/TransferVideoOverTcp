@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -14,11 +14,12 @@
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
+    <PackageReference Include="Sportronics.GetVideoWPFLib" Version="1.1.0" />
   </ItemGroup>
 
-  <ItemGroup>
+  <!-- ItemGroup>
     <ProjectReference Include="..\GetVideoWPFLib\GetVideoWPFLib.csproj" />
-  </ItemGroup>
+  </ItemGroup -->
 
   <ItemGroup>
     <None Include="LICENSE" Pack="true" PackagePath="" />
