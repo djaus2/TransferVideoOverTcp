@@ -6,8 +6,13 @@
 Transfer a video locally from an Android phone to Windows Desktop over TCP.
 
 ----
-> *Coming:* ***GetVideoWPFLib***  and ***GetVideoWPFLibSample***  
-> Better WPF app  ***GetVideoInAppWPF*** now available.  Doesn't use Windows Service but uses in-app only Tcp service.
+**Latest**
+
+- :racehorse: **GetVideoWPFLib** A WPF library with a control that can be *simply* used in a WPF app to download videos.
+  - Also as a NuGet package [Sportronics.GetVideoWPFLib](https://www.nuget.org/packages/Sportronics.GetVideoWPFLib)
+  - Looks and feels just like the ***GetVideoInAppWPF*** app when used in an app as below.
+-  :running: **GetVideoWPFLibSample** A WPF app that uses that NuGet pacakge but could be reconfiguraed to use the lib source
+  
 ----
 
 ## Projects
@@ -16,6 +21,7 @@ Transfer a video locally from an Android phone to Windows Desktop over TCP.
     - Uses NuGet Packae  [Sportronics.ConfigurationManager](https://www.nuget.org/packages/Sportronics.ConfigurationManager) to handle command line options
   - :small_airplane: **DownloadVideoOverTcpLib**
     - Library used by Console app to implement reception of the video file over TCP.
+    - Now a NuGet pacakage [Sportronics.DownloadVideoOverTcpLib](https://www.nuget.org/packages/Sportronics.DownloadVideoOverTcpLib)
 - :telephone: **SendVideo**
   - MAUI Android phone app to send video from /Movies folder
     - UI includes selection of file from the folder
