@@ -73,7 +73,7 @@ Start-Process ".\GetVideoWPF.exe" -Verb  RunAs
 - SendVideo uses a configurable TimeOut for sends _(default 15 seconds)_.
 
   ## Access
-Windows Firewall: Ensure that the Windows Firewall is not blocking local ICMP (ping) requests. 
+**Windows Firewall:** Ensure that the Windows Firewall is not blocking local ICMP (ping) requests. 
 You can do this by creating inbound and outbound rules to allow ICMP requests. 
 Go to Control Panel > Windows Defender Firewall > Advanced Settings and enable the Echo Request - ICMPv4-In rule. 
 2
