@@ -66,6 +66,10 @@ namespace GetVideoWPFLib.ViewModels
             _videoDownloadService.VideoDownloadCompleted += OnVideoDownloadCompleted;
             _videoDownloadService.VideoDownloadFailed += OnVideoDownloadFailed;
             
+            // Ensure the popup is hidden initially
+            IsVideoDownloading = false;
+            CurrentDownloadFile = "";
+            
             LoadLocalIpAddress();
             RefreshDownloadedFiles();
             SetupFileWatcher(_downloadFolder);
