@@ -386,3 +386,4 @@ launchSettings.json
 /DownloadVideoOverTcpLib/Nuget.txt
 /secrets.json.template
 /.github/workflows/build-and-publish.yml
+/GetVideoWPFLib/GetVideoWPFLib.nuspec
