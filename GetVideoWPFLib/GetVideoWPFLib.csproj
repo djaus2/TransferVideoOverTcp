@@ -6,27 +6,25 @@
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
-    <PackageLicenseExpression>CC0-1.0</PackageLicenseExpression>
-    <Version>1.2.0</Version>
+
+    <Version>1.2.1</Version>
+    <Authors>David Janes</Authors>
+    <Company>Sportronics</Company>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/djaus2/TransferVideoOverTcp</RepositoryUrl>
+
   </PropertyGroup>
 
-
-<ItemGroup>
-  <None Include="icon.png" Pack="true" PackagePath="" />
-  <None Include="README.md" Pack="true" PackagePath="" />
-</ItemGroup>
-
-
-
+  <ItemGroup>
+    <None Include="icon.png" Pack="true" PackagePath="" />
+    <None Include="README.md" Pack="true" PackagePath="" />
+    <None Include="LICENSE" Pack="true" PackagePath="" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
     <PackageReference Include="Sportronics.DownloadVideoOverTcpLib" Version="1.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="LICENSE" Pack="true" PackagePath="" />
   </ItemGroup>
 </Project>
