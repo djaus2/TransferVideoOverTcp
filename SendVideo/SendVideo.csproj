@@ -59,4 +59,10 @@
 	  <ProjectReference Include="..\SendVideoOverTCPLib\SendVideoOverTcpLib.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Compile Update="MainPage.xaml.cs">
+	    <DependentUpon>MainPage.xaml</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
 </Project>
