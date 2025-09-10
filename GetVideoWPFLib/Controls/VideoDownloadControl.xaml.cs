@@ -37,16 +37,16 @@ namespace GetVideoWPFLib.Controls
         private void InitializeControl()
         {
             // Wire up the Browse button click event if not already done
-            BrowseButton.Click -= BrowseButton_Click; // Remove any existing handlers
-            BrowseButton.Click += BrowseButton_Click;
+            SelectButton.Click -= SelectButton_Click; // Remove any existing handlers
+            SelectButton.Click += SelectButton_Click;
         }
 
-        private void BrowseButton_Click(object sender, RoutedEventArgs e)
+        private void SelectButton_Click(object sender, RoutedEventArgs e)
         {
-            BrowseFolder();
+            SelectFolder();
         }
 
-        private void BrowseFolder()
+        private void SelectFolder()
         {
             if (ViewModel == null)
                 return;

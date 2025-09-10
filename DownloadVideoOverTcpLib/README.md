@@ -6,6 +6,9 @@ A .NET library for receiving video files over TCP with checksum verification. Th
 
 - TCP-based file transfer with automatic connection handling
 - Checksum verification using SHA-256
+  - A Json file with meta info is transferred first
+    - Containing the expected checksum and filename
+    - Also the Video TimeFrom mode, Video Start Time, and GunTime if relevant.
 - Progress reporting during download
 - Cross-platform compatibility (.NET 9.0)
 - Simple API for easy integration
@@ -13,6 +16,8 @@ A .NET library for receiving video files over TCP with checksum verification. Th
 ## Requirements
 
 - .NET 9.0 or later
+- Required Custom NuGet Packages:
+  - [Sportronics.VideoEnums.Windows V2.0.1](https://www.nuget.org/packages/Sportronics.VideoEnums.Windows/2.0.1)
 
 ## Installation
 

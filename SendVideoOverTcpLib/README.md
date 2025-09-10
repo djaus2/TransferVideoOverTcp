@@ -6,6 +6,13 @@ A MAUI library for transferring video over TCP from phone to Windows WPF complem
 
 SendVideoOverTcpLib is an Android library that enables MAUI applications to send video files over TCP connections. It's primarily designed for Android devices to transfer video files to matching Windows desktop applications.  See repository for the project **GetVideoWPFLibSample**. Also used in the project **AthsVideoRecording** in the the repository [djaus2/AthsVideoRecording](https://github.com/djaus2/AthsVideoRecording).
 
+## Requirements
+
+- .NET 9.0 or later
+- Required Custom NuGet Packages:
+  - [Sportronics.VideoEnums V2.0.2](https://www.nuget.org/packages/Sportronics.VideoEnums/2.0.2)
+
+
 ## Features
 
 - Send video files from mobile devices to desktop applications

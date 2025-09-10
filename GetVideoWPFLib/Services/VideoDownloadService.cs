@@ -59,6 +59,8 @@ namespace GetVideoWPFLib.Services
                                 });
                                 
                                 fileName = DownloadVideoOverTCPLib.GetVideo.Download(folder, port);
+                                
+
 
                                 if (!string.IsNullOrEmpty(fileName))
                                 {

@@ -7,19 +7,40 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 
-
+		<DefineConstants Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">$(DefineConstants);ANDROID</DefineConstants>
 
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
-	</PropertyGroup>
+    <!-- NuGet Package Metadata -->
+    <PackageId>Sportronics.SendVideoOverTcpLib</PackageId>
+    <Version>2.0.2</Version>
+    <Authors>David Jones</Authors>
+    <Company>Sportronics</Company>
+    <Description>A MAUI library for transferring video over TCP from phone to Windows WPF complementary app (see repository project GetVideoWPFLibSample).</Description>
+    <PackageTags>video;tcp;streaming;maui</PackageTags>
+    <PackageLicenseExpression>CC-BY-SA-4.0</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/djaus2/TransferVideoOverTcp</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/djaus2/TransferVideoOverTcp</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageReleaseNotes>Json Meta info file transferred before video incl. filename and checksum</PackageReleaseNotes>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  
+  </PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
+		<PackageReference Include="Sportronics.VideoEnums" Version="2.0.2" />
 	</ItemGroup>
 
-	<!-- Include README.md in the package -->
+	<!-- Include README.md and icon in the package -->
 	<ItemGroup>
 		<None Include="README.md" Pack="true" PackagePath="\" />
+	</ItemGroup>
+	<ItemGroup>
+    <!-- PackageReference Include="Sportronics.VideoEnums" Version="2.0.2" / -->
+    <!-- ProjectReference Include="..\VideoEnums\VideoEnums.csproj" / -->
 	</ItemGroup>
 
 </Project>

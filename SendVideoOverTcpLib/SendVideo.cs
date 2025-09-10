@@ -1,10 +1,13 @@
-﻿using System.Net.Sockets;
+using System.Net.Sockets;
 using System.Net;
 using System.Text;
 using System.Security.Cryptography;
 using System.Net.NetworkInformation;
 using System.Collections.ObjectModel;
 using SendVideoOverTCPLib.ViewModels;
+using SendVideoOverTCPLib.Services;
+using PhotoTimingDjaus.Enums;
+using Microsoft.Extensions.DependencyInjection;
 
 
 namespace SendVideoOverTCPLib
@@ -21,18 +24,47 @@ namespace SendVideoOverTCPLib
             set; 
         } 
 
+        private static IVideoMetadataService VideoMetadataService =>
+            Application.Current.Handler.MauiContext.Services.GetService<IVideoMetadataService>() ?? 
+            new DefaultVideoMetadataService();
 
+        private static void ShowMessage(string message, string title = "Alert")
+        {
+            MainThread.BeginInvokeOnMainThread(async () =>
+            {
+                await Microsoft.Maui.Controls.Application.Current.MainPage.DisplayAlert(title, message, "OK");
+            });
+        }
 
         public static async Task OnSendMovieFileClicked(NetworkViewModel _networkViewModel)
         {
-            var file = await PickMovieFileAsync();
-            if (file is null)
+            // Use the VideoMetadataService to pick a (Prefixed) video file and get its original metadata
+            var videoFileInfo = await VideoMetadataService.PickVideoAsync();
+            if (videoFileInfo is null)
                 return;
+
+            // Construct VideoInfo from PrefixedFilename   filename
+            VideoInfo videoInfo = new VideoInfo
+            {
+                SelectedVideoPath = videoFileInfo.FilePath,
+                SelectedFilename = videoFileInfo.FileName,
+                VideoStart = videoFileInfo.CreationTime,
+                GunTime = videoFileInfo.CreationTime,
+                DetectMode = VideoDetectMode.FromFlash,
+                TimeFrom = TimeFromMode.FromVideoStart
+            };
+
+            bool result = videoInfo.GetMetaInfoandFilename();
+            //ShowMessage(videoInfo.ToJson(), "Video Info JSON");
+            if (!result)
+            {
+                return;
+            }
 
             try
             {
                 // Set busy state to show the indicator
-                await SendFileWithChecksumAsync(file.FullPath, _networkViewModel.SelectedIpAddress, _networkViewModel.SelectedPort);
+                await SendFileWithChecksumAsync(videoFileInfo.FilePath, videoInfo.ToJson(), _networkViewModel.SelectedIpAddress, _networkViewModel.SelectedPort);
             }
             catch (Exception ex)
             {
@@ -47,6 +79,7 @@ namespace SendVideoOverTCPLib
             }
         }
 
+        // This method is replaced by VideoMetadataService.PickVideoAsync
         private static async Task<FileResult?> PickMovieFileAsync()
         {
             var customFileTypes = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
@@ -63,7 +96,7 @@ namespace SendVideoOverTCPLib
             return await FilePicker.PickAsync(options);
         }
 
-        public static async Task SendFileWithChecksumAsync(string filePath, string ipAddress, int port)
+        public static async Task SendFileWithChecksumAsync(string filePath, string videoInfo, string ipAddress, int port)
         {
 
             using var client = new TcpClient();
@@ -91,18 +124,13 @@ namespace SendVideoOverTCPLib
             }
             using var stream = client.GetStream();
 
-            // Send filename
-            string fileName = Path.GetFileName(filePath);
-            byte[] nameBytes = Encoding.UTF8.GetBytes(fileName);
-            byte[] nameLength = BitConverter.GetBytes(nameBytes.Length);
-            await stream.WriteAsync(nameLength);
-            await stream.WriteAsync(nameBytes);
+            // Send meta info, including Checksum
+            string json = videoInfo; 
+            byte[] jsonBytes = Encoding.UTF8.GetBytes(json);
+            byte[] jsonLength = BitConverter.GetBytes(jsonBytes.Length);
+            await stream.WriteAsync(jsonLength);
+            await stream.WriteAsync(jsonBytes);
 
-            // Calculate checksum
-            byte[] fileBytes = await File.ReadAllBytesAsync(filePath);
-            using var sha256 = SHA256.Create();
-            byte[] checksum = sha256.ComputeHash(fileBytes);
-            await stream.WriteAsync(checksum); // 32 bytes for SHA256
 
             // Send file in chunks
             using var fileStream = File.OpenRead(filePath);

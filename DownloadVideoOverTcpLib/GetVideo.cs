@@ -4,6 +4,9 @@ using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Text;
 using System.Security.Cryptography;
+using PhotoTimingDjaus.Enums;
+using Xceed.Wpf.Toolkit;
+using System.IO;
 
 namespace DownloadVideoOverTCPLib
 {
@@ -18,12 +21,12 @@ namespace DownloadVideoOverTCPLib
 
         if (string.IsNullOrEmpty(localIP))
         {
-            Console.WriteLine("Local IP address not found. Please check your network connection.");
+                System.Diagnostics.Debug.WriteLine("Local IP address not found. Please check your network connection.");
             return ""; // Exit early — no point starting the server
         }
         else
         {
-            Console.WriteLine($"Listening on IP: {localIP}, Port: {port}");
+                System.Diagnostics.Debug.WriteLine($"Listening on IP: {localIP}, Port: {port}");
         }
 
 
@@ -34,28 +37,39 @@ namespace DownloadVideoOverTCPLib
 
             var listener = new TcpListener(IPAddress.Any, port);
             listener.Start();
-            Console.WriteLine("Waiting for connection...");
+                System.Diagnostics.Debug.WriteLine("Waiting for connection...");
 
             using var client = listener.AcceptTcpClient();
-            Console.WriteLine("Client connected - starting download...");
+                System.Diagnostics.Debug.WriteLine("Client connected - starting download...");
             using var networkStream = client.GetStream();
 
-            byte[] nameLengthBytes = new byte[sizeof(int)];
-            ReadExact(networkStream, nameLengthBytes, 0, sizeof(int));
-            int nameLength = BitConverter.ToInt32(nameLengthBytes, 0);
+            //Get meta info including filename and checksum
+            byte[] jsonLengthBytes = new byte[sizeof(int)];
+            ReadExact(networkStream, jsonLengthBytes, 0, sizeof(int));
+            int jsonLength = BitConverter.ToInt32(jsonLengthBytes, 0);
 
-            byte[] nameBuffer = new byte[nameLength];
-            ReadExact(networkStream, nameBuffer, 0, nameLength);
-            string fileName = Encoding.UTF8.GetString(nameBuffer);
-            Console.WriteLine($"Receiving file: {fileName}");
+            System.Diagnostics.Debug.WriteLine($"JSON length: {jsonLength} bytes");
 
-            byte[] expectedChecksum = new byte[32]; // SHA256
-            ReadExact(networkStream, expectedChecksum, 0, 32);
+            byte[] jsonBuffer = new byte[jsonLength];
+            ReadExact(networkStream, jsonBuffer, 0, jsonLength);
+            string json = Encoding.UTF8.GetString(jsonBuffer);
+           System.Diagnostics.Debug.WriteLine($"Received JSON: {json}");
+                VideoInfo videoInfo = new VideoInfo(json);
+
+            // Get info file
+            string fileName = videoInfo.RecordedFilename; // Encoding.UTF8.GetString(nameBuffer);
+            string infoFilePath = Path.Combine(fileFolder, Path.GetFileNameWithoutExtension(fileName) + ".json");
+            File.WriteAllText(infoFilePath, json);
+            System.Diagnostics.Debug.WriteLine($"Receiving file: {fileName}");
+
+            // Get Video and compare Checksums
+            byte[]    expectedChecksum = videoInfo.Checksum; // new byte[32]; // SHA256
+
             string filePath = Path.Combine(fileFolder, fileName);
             using var fileStream = File.Create(filePath);
             using var sha256 = SHA256.Create();
 
-            Console.WriteLine("Downloading video data...");
+            System.Diagnostics.Debug.WriteLine("Downloading video data...");
             byte[] buffer = new byte[1024 * 1024];
             int bytesRead;
             long totalBytes = 0;
@@ -67,28 +81,33 @@ namespace DownloadVideoOverTCPLib
             }
             sha256.TransformFinalBlock(Array.Empty<byte>(), 0, 0);
 
-            Console.WriteLine($"Download completed. Total bytes: {totalBytes:N0}");
+            System.Diagnostics.Debug.WriteLine($"Download completed. Total bytes: {totalBytes:N0}");
 
             byte[] actualChecksum = sha256.Hash!;
 
-            // Inject an error for testing
-            //expectedChecksum[0] ^= 0xFF; // Flip the first byte to corrupt it
 
 
             bool isValid = expectedChecksum.SequenceEqual(actualChecksum);
-            Console.WriteLine($"Expected Checksum: {BitConverter.ToString(expectedChecksum).Replace("-", "")}");
-            Console.WriteLine($"Actual Checksum: {BitConverter.ToString(actualChecksum).Replace("-", "")}");
-            Console.WriteLine(isValid ? "✅ File received successfully" : "❌ Checksum mismatch!");
+            System.Diagnostics.Debug.WriteLine($"Expected Checksum: {BitConverter.ToString(expectedChecksum).Replace("-", "")}");
+            System.Diagnostics.Debug.WriteLine($"Actual Checksum: {BitConverter.ToString(actualChecksum).Replace("-", "")}");
+            System.Diagnostics.Debug.WriteLine(isValid ? "✅ File received successfully" : "❌ Checksum mismatch!");
+            if(!isValid)
+            {
+                    File.Delete(filePath);
+            }
+
+            // All god if isValid
 
             listener.Stop();
             return fileName;
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error during transfer: {ex.Message}");
+            System.Diagnostics.Debug.WriteLine($"Error during transfer: {ex.Message}");
             return "";
         }
-    }        public static void ReadExact(Stream stream, byte[] buffer, int offset, int count)
+    }   
+    public static void ReadExact(Stream stream, byte[] buffer, int offset, int count)
         {
             int totalRead = 0;
             while (totalRead < count)

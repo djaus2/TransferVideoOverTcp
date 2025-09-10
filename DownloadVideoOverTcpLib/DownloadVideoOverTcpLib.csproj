@@ -1,26 +1,34 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net9.0-windows</TargetFramework>
     <RootNamespace>DownloadVideo_OverTCPLib</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
     <PackageId>Sportronics.DownloadVideoOverTcpLib</PackageId>
     <Authors>David Jones</Authors>
     <Company>Sportronics</Company>
-    <Description>A library for downloading videos over TCP. Usage: See the ReadMe. Also, there is a sample app in teh repository.</Description>
+    <Description>A library for downloading videos over TCP. Usage: See the ReadMe. Also, there is a sample app in heh repository.</Description>
     <PackageTags>configuration;settings;json;commandline</PackageTags>
     <PackageLicenseExpression>CC-BY-4.0</PackageLicenseExpression>
-  <Version>1.0.0</Version>
+    <Version>2.0.3</Version>
+
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="icon.png" Pack="true" PackagePath="" />
     <None Include="README.md" Pack="true" PackagePath="" />
+        <None Include="LICENSE" Pack="true" PackagePath="" />    
   </ItemGroup>
 
   <ItemGroup>
     <None Include="LICENSE" Pack="true" PackagePath="" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Extended.Wpf.Toolkit" Version="4.7.25104.5739" />
+    <PackageReference Include="Sportronics.VideoEnums.Windows" Version="2.0.3" />
+    <!-- ProjectReference Include="..\VideoEnums.Windows\VideoEnums.Windows.csproj" / -->
   </ItemGroup>
 
 </Project>

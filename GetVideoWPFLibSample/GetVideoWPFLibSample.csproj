@@ -14,13 +14,17 @@
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
-    <PackageReference Include="Sportronics.GetVideoWPFLib" Version="1.2.1" />
+    <PackageReference Include="Sportronics.GetVideoWPFLib" Version="2.0.3" />
+    <!-- ProjectReference Include="..\GetVideoWPFLib\GetVideoWPFLib.csproj" / -->
   </ItemGroup>
 
 
   <ItemGroup>
+		<None Include="..\icon.png" Pack="true" PackagePath="" />
     <None Include="LICENSE" Pack="true" PackagePath="" />
   </ItemGroup>
+
+
 
   <ItemGroup>
     <None Update="appsettings.json">

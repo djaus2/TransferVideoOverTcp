@@ -1,21 +1,39 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFrameworks>net9.0-android;</TargetFrameworks>
-
 		<OutputType>Exe</OutputType>
 		<RootNamespace>SendVideo</RootNamespace>
 		<UseMaui>true</UseMaui>
 		<SingleProject>true</SingleProject>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<PackageLicenseExpression>CC0-1.0</PackageLicenseExpression>
+    <PackageLicenseExpression>CC-BY-SA-4.0</PackageLicenseExpression>
+    <NoWarn>$(NoWarn);XC0022</NoWarn>
+	</PropertyGroup>
+	
+	<!-- Debug configuration -->
+	<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+		<RuntimeIdentifiers>android-arm64</RuntimeIdentifiers>
+		<AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
+	</PropertyGroup>
+	
+	<!-- Release configuration -->
+	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+		<RuntimeIdentifiers>android-arm64</RuntimeIdentifiers>
+		<AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
+		<AndroidLinkMode>None</AndroidLinkMode>
+		<AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
+		<RunAOTCompilation>false</RunAOTCompilation>
+		<AndroidEnableSGenConcurrent>false</AndroidEnableSGenConcurrent>
+	</PropertyGroup>
 
+	<PropertyGroup>
 		<!-- Display name -->
 		<ApplicationTitle>SendVideo</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>au.com.sportronics.sendvideo</ApplicationId>
+		<ApplicationId>sportronics.sendvideo</ApplicationId>
 
 		<!-- Versions -->
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
@@ -24,12 +42,7 @@
 		<!-- To develop, package, and publish an app to the Microsoft Store, see: https://aka.ms/MauiTemplateUnpackaged -->
 		<WindowsPackageType>None</WindowsPackageType>
 
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">15.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
-		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -53,10 +66,12 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.0" />
+		<PackageReference Include="Sportronics.SendVideoOverTcpLib" Version="2.0.2" />
+    <!-- ProjectReference Include="..\VideoEnums\VideoEnums.csproj" / -->
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\SendVideoOverTCPLib\SendVideoOverTcpLib.csproj" />
+   
 	</ItemGroup>
 
 	<ItemGroup>
