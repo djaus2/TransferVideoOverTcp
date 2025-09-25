@@ -7,7 +7,7 @@ Transfer a video locally from an Android phone to Windows Desktop over TCP.
 
 ----
 ## Latest Updates
-
+- :racehorse: V2.0.4  Buf fix. Could select downloaf folder in control in GetVideoWPFLib.
 - :racehorse: V2.0.3  Major rework of code.  When sent, meta info is parsed and removed from filename and sent as json before video file tramsission and used at that end.
 
 ## Latest Projects
