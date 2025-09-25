@@ -8,7 +8,7 @@ Transfer a video locally from an Android phone to Windows Desktop over TCP.
 ----
 ## Latest Updates
 
-- :racehorse: **GetVideoWPFLib**: Version 1.2.1 Updated so can be used in [AthStitcher](https://github.com/djaus2/PhotoTimingDjaus) Photo Finish project
+- :racehorse: V2.0.3  Major rework of code.  When sent, meta info is parsed and removed from filename and sent as json before video file tramsission and used at that end.
 
 ## Latest Projects
 - :racehorse: **GetVideoWPFLib** A WPF library with a control that can be *simply* used in a WPF app to download videos.
